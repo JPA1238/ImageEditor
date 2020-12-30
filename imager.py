@@ -27,11 +27,13 @@ def loadImage(link, name):
     del img
 
 
-def getTextImage(width, height, text):
+def getTextImage(width, height, text, fontSize):
     img = Image.new('RGB', (width, height), (255, 255, 255))
     textImg = ImageDraw.Draw(img)
+    if fontSize == 0:
+        fontSize = int(height/2)
     font = ImageFont.truetype(
-        'D:\\Documenten\\blender\\fonts\CascadiaCode-2009.22\\ttf\\CascadiaCode.ttf', int(height/2))
+        'D:\\Documenten\\blender\\fonts\CascadiaCode-2009.22\\ttf\\CascadiaCode.ttf', fontSize)
     w, h = textImg.textsize(text, font=font)
     h += int(h*0.21)
     textImg.text(((width-w)/2, (height-h)/2), text=text,
@@ -59,14 +61,14 @@ def resizeImage(link):
     img = img.resize((1920, int( (1920 / img.size[0]) * img.size[1] )))
     img.save('images\\resized.png', 'png')
 
-def edit(link, text, l, r, t, b):
+def edit(link, text, l, r, t, b, fontSize):
     resizeImage(link)
     img = Image.open('images\\resized.png')
     w, h = img.size
     cropImage(l, w-r, t, h-b)
     img = Image.open('images\\cropped.png')
     w, h = img.size
-    getTextImage(w, int(h/10), text)
+    getTextImage(w, int(h/10), text, fontSize)
     mergeImage()
     del img
 
