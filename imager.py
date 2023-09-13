@@ -8,7 +8,7 @@ def getBlankWhiteImage():
     return img
 
 
-getBlankWhiteImage().save('images\\blankWhite.png', 'png')
+getBlankWhiteImage().save('images/blankWhite.png', 'png')
 
 
 def getBlankBlackImage():
@@ -16,62 +16,62 @@ def getBlankBlackImage():
     return img
 
 
-getBlankBlackImage().save('images\\blankBlack.png', 'png')
+getBlankBlackImage().save('images/blankBlack.png', 'png')
 
 
 def loadImage(link, name):
     img = Image.open(link)
     img.convert('RGB')
-    img.thumbnail((600, 600), Image.ANTIALIAS)
-    img.save('images\\' + name + '.png', 'png')
+    img.thumbnail((600, 600), Image.LANCZOS)
+    img.save('images/' + name + '.png', 'png')
     del img
 
 
-def getTextImage(width, height, text, fontSize):
+def getTextImage(width: int, height: int, text: str, fontSize: int):
     img = Image.new('RGB', (width, height), (255, 255, 255))
     textImg = ImageDraw.Draw(img)
     if fontSize == 0:
         fontSize = int(height/2)
     font = ImageFont.truetype(
-        'D:\\Documenten\\blender\\fonts\CascadiaCode-2009.22\\ttf\\CascadiaCode.ttf', fontSize)
-    w, h = textImg.textsize(text, font=font)
+        '/usr/share/fonts/hack-nerd/Hack Regular Nerd Font Complete Mono.ttf', fontSize)
+    _, _, w, h = textImg.textbbox((0,0), text, font=font)
     h += int(h*0.21)
     textImg.text(((width-w)/2, (height-h)/2), text=text,
                  fill=(0, 0, 0), font=font)
-    img.save('images\\TextImage.png', 'png')
+    img.save('images/textImage.png', 'png')
     del img
 
 def cropImage (l, r, t, b):
-    img = Image.open('images\\resized.png')
+    img = Image.open('images/resized.png')
     img = img.crop((l, t, r, b))
-    img.save('images\\cropped.png', 'png')
+    img.save('images/cropped.png', 'png')
     del img
 
 def mergeImage() :
-    img = Image.open('images\\cropped.png')
-    text = Image.open('images\\textImage.png')
+    img = Image.open('images/cropped.png')
+    text = Image.open('images/textImage.png')
     combined = Image.new('RGB', (img.size[0], img.size[1] + text.size[1]))
     combined.paste(img, (0, 0))
     combined.paste(text, (0, img.size[1]))
-    combined.save('images\\edited.png', 'png')
+    combined.save('images/edited.png', 'png')
     del img, text, combined
 
 def resizeImage(link):
     img = Image.open(link)
     img = img.resize((1920, int( (1920 / img.size[0]) * img.size[1] )))
-    img.save('images\\resized.png', 'png')
+    img.save('images/resized.png', 'png')
 
 def edit(link, text, l, r, t, b, fontSize):
     resizeImage(link)
-    img = Image.open('images\\resized.png')
+    img = Image.open('images/resized.png')
     w, h = img.size
     cropImage(l, w-r, t, h-b)
-    img = Image.open('images\\cropped.png')
+    img = Image.open('images/cropped.png')
     w, h = img.size
     getTextImage(w, int(h/10), text, fontSize)
     mergeImage()
     del img
 
 def saveImage(folder, name):
-    img = Image.open('images\\edited.png')
-    img.save(folder + '\\' + name + '.png', 'png')
+    img = Image.open('images/edited.png')
+    img.save(folder + '/' + name + '.png', 'png')
